@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:belajar_networking/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -12,6 +13,14 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Belajar Networking Flutter'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              context.router.push(const LoginRoute());
+            },
+            icon: const Icon(Icons.login),
+          ),
+        ],
       ),
       body: Center(
         child: DefaultTextStyle(
