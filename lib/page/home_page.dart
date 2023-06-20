@@ -1,52 +1,40 @@
-import 'package:belajar_networking/services/user_service.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class HomePage extends StatefulWidget {
+@RoutePage()
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  late Future fetchData;
-
-  @override
-  void initState() {
-    super.initState();
-    fetchData = UserServices.getListUser();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Page'),
+        title: const Text('Belajar Networking Flutter'),
         centerTitle: true,
-        backgroundColor: Colors.black,
       ),
       body: Center(
-        child: FutureBuilder(
-          future: fetchData,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting ||
-                snapshot.data == null) {
-              return const CircularProgressIndicator();
-            }
-            List listUser = snapshot.data['data'];
-            return ListView.builder(
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(listUser[index]['avatar']),
-                  ),
-                  title: Text('Email: ${listUser[index]['email']}'),
-                );
-              },
-              itemCount: listUser.length,
-            );
-            // return ListView.builder(itemBuilder: , itemCount: snapshot.data.length,)
-          },
+        child: DefaultTextStyle(
+          style: TextStyle(fontSize: 20.sp, color: Colors.black),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 100.r,
+                backgroundImage: const NetworkImage(
+                  'https://placehold.co/600x400/png',
+                ),
+              ),
+              20.verticalSpace,
+              const Text('Full name: '),
+              4.verticalSpace,
+              const Text('-'),
+              20.verticalSpace,
+              const Text('Email: '),
+              4.verticalSpace,
+              const Text('-'),
+            ],
+          ),
         ),
       ),
     );
