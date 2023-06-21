@@ -1,11 +1,24 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:belajar_networking/controller/cubit/user_cubit.dart';
+import 'package:belajar_networking/model/user_list_model/datum.dart';
 import 'package:belajar_networking/routes/app_router.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<UserCubit>().fetchList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,29 +35,31 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: DefaultTextStyle(
-          style: TextStyle(fontSize: 20.sp, color: Colors.black),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: 100.r,
-                backgroundImage: const NetworkImage(
-                  'https://placehold.co/600x400/png',
-                ),
-              ),
-              20.verticalSpace,
-              const Text('Full name: '),
-              4.verticalSpace,
-              const Text('-'),
-              20.verticalSpace,
-              const Text('Email: '),
-              4.verticalSpace,
-              const Text('-'),
-            ],
-          ),
-        ),
+      body: BlocBuilder<UserCubit, UserState>(
+        builder: (context, state) {
+          if (state is UserLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is UserLoaded) {
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                Datum datum = state.userListModel.data![index];
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(datum.avatar!),
+                  ),
+                  title: Text(datum.firstName!),
+                  subtitle: Text(datum.email!),
+                );
+              },
+              itemCount: state.userListModel.data!.length,
+            );
+          }
+          return const Center(
+            child: Text('Error'),
+          );
+        },
       ),
     );
   }
